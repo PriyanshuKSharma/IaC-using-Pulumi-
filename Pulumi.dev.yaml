@@ -1,0 +1,4 @@
+environment:
+  - iac-lab1/dev
+config:
+  iac-lab1:siteDir: D:\SEM-6\CT\iac-lab1\www
