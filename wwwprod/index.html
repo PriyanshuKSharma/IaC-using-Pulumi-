@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page(production page)</title>
+</head>
+<body>
+    <h2>Login Form</h2>
+    <form action="/login" method="post">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <br>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <br>
+        <div>
+            <input type="checkbox" id="remember" name="remember">
+            <label for="remember">Remember me</label>
+        </div>
+        <br>
+        <div>
+            <input type="submit" value="Login">
+        </div>
+        <br>
+        <div>
+            <a href="#">Forgot Password?</a>
+        </div>
+        <div>
+            <p>Don't have an account? <a href="#">Sign up</a></p>
+        </div>
+    </form>
+</body>
+</html>
