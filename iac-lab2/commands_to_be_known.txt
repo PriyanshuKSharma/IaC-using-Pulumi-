@@ -1,0 +1,12 @@
+pulumi stack output public_ip
+
+curl http://<public_ip>
+
+1. List all VPCs:
+aws ec2 describe-vpcs --query "Vpcs[*].{ID:VpcId,CIDR:CidrBlock}"
+
+2. Check Subnets in the New VPC
+aws ec2 describe-subnets --filters "Name=vpc-id,Values=<NEW_VPC_ID>" --query "Subnets[*].CidrBlock"
+
+3. Manually start the web serve
+python -m http.server 80
