@@ -1,0 +1,11 @@
+name: iac-lab3
+description: An AWS Python program to create an IAM user
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-python
