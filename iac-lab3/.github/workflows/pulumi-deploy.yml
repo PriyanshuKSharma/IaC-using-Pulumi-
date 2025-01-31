@@ -1,0 +1,36 @@
+name: Pulumi Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Pulumi
+        run: curl -fsSL https://get.pulumi.com | sh
+
+      - name: Setup AWS Credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "us-east-1"
+        run: |
+          pulumi stack select dev
+          pulumi config set aws:region $AWS_REGION
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Pulumi
+        run: pulumi up --yes
