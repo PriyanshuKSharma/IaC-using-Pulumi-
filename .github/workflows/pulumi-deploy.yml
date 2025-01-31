@@ -36,13 +36,15 @@ jobs:
           pulumi stack select dev
           pulumi config set aws:region $AWS_REGION
 
-      # Install Python dependencies
+      # Install Python dependencies inside the `iac-lab3` directory
       - name: Install Dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r ./iac-lab3/requirements.txt
+        working-directory: ./iac-lab3
 
-      # Run Pulumi to apply the infrastructure changes
+      # Run Pulumi to apply the infrastructure changes in the `iac-lab3` directory
       - name: Run Pulumi
         run: pulumi up --yes
+        working-directory: ./iac-lab3
 
       # Publishing Pulumi outputs as GitHub Actions artifacts
       - name: Save Pulumi Outputs
@@ -50,7 +52,7 @@ jobs:
           pulumi stack output --json > pulumi_outputs.json
           echo "Pulumi outputs saved to pulumi_outputs.json"
         if: success()
-      
+
       # Setting a notification or status update after the deployment
       - name: Notify Deployment Status
         run: |
