@@ -21,14 +21,20 @@ jobs:
           python-version: "3.11"
 
       # Install specific version of Pulumi (e.g., 3.0.0)
-      - name: Install Pulumi
+      - name: Install Specific Version of Pulumi
         run: |
-          curl -fsSL https://get.pulumi.com | sh
-          echo "Installing specific version of Pulumi"
+          echo "Installing Pulumi version 3.0.0"
+          VERSION="3.0.0"
+          PULUMI_URL="https://github.com/pulumi/pulumi/releases/download/v${VERSION}/pulumi-v${VERSION}-linux-x64.tar.gz"
+          
+          # Download and extract Pulumi
+          curl -fsSL ${PULUMI_URL} -o pulumi.tar.gz
           mkdir -p $HOME/.pulumi/bin
-          curl -fsSL https://github.com/pulumi/pulumi/releases/download/v3.0.0/pulumi-v3.0.0-linux-x64.tar.gz | tar -xz -C $HOME/.pulumi/bin
-          # Add Pulumi to PATH for all subsequent steps
+          tar -xzf pulumi.tar.gz -C $HOME/.pulumi/bin
+          
+          # Ensure the installed version is in the PATH
           echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
+          echo "Pulumi version:"
           pulumi version # Verify the installed version
 
       # Setup AWS Credentials using the secret AWS_CONFIG
