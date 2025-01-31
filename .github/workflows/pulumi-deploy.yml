@@ -14,6 +14,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+       # Set Pulumi Access Token (accessed from GitHub Secrets)
+      - name: Set Pulumi Access Token
+        run: echo "PULUMI_ACCESS_TOKEN=${{ secrets.PULUMI_ACCESS_TOKEN }}" >> $GITHUB_ENV
+        
+
       # Setup Python environment
       - name: Setup Python
         uses: actions/setup-python@v4
