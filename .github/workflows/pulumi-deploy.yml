@@ -27,7 +27,8 @@ jobs:
           echo "Installing specific version of Pulumi"
           mkdir -p $HOME/.pulumi/bin
           curl -fsSL https://github.com/pulumi/pulumi/releases/download/v3.0.0/pulumi-v3.0.0-linux-x64.tar.gz | tar -xz -C $HOME/.pulumi/bin
-          export PATH=$HOME/.pulumi/bin:$PATH
+          # Add Pulumi to PATH for all subsequent steps
+          echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
           pulumi version # Verify the installed version
 
       # Setup AWS Credentials using the secret AWS_CONFIG
@@ -60,5 +61,3 @@ jobs:
         run: |
           echo "Pulumi deployment completed successfully."
         if: success()
-
-
