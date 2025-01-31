@@ -20,11 +20,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      # Install Pulumi and pin to a specific version (e.g., 3.0.0)
+      # Install specific version of Pulumi (e.g., 3.0.0)
       - name: Install Pulumi
         run: |
           curl -fsSL https://get.pulumi.com | sh
-          pulumi version --install 3.0.0  # Replace with the version you need
+          echo "Installing specific version of Pulumi"
+          mkdir -p $HOME/.pulumi/bin
+          curl -fsSL https://github.com/pulumi/pulumi/releases/download/v3.0.0/pulumi-v3.0.0-linux-x64.tar.gz | tar -xz -C $HOME/.pulumi/bin
+          export PATH=$HOME/.pulumi/bin:$PATH
+          pulumi version # Verify the installed version
 
       # Setup AWS Credentials using the secret AWS_CONFIG
       - name: Setup AWS Credentials
@@ -36,15 +40,13 @@ jobs:
           pulumi stack select dev
           pulumi config set aws:region $AWS_REGION
 
-      # Install Python dependencies inside the `iac-lab3` directory
+      # Install Python dependencies
       - name: Install Dependencies
-        run: pip install -r ./iac-lab3/requirements.txt
-        working-directory: ./iac-lab3
+        run: pip install -r requirements.txt
 
-      # Run Pulumi to apply the infrastructure changes in the `iac-lab3` directory
+      # Run Pulumi to apply the infrastructure changes
       - name: Run Pulumi
         run: pulumi up --yes
-        working-directory: ./iac-lab3
 
       # Publishing Pulumi outputs as GitHub Actions artifacts
       - name: Save Pulumi Outputs
@@ -52,10 +54,9 @@ jobs:
           pulumi stack output --json > pulumi_outputs.json
           echo "Pulumi outputs saved to pulumi_outputs.json"
         if: success()
-
+      
       # Setting a notification or status update after the deployment
       - name: Notify Deployment Status
         run: |
           echo "Pulumi deployment completed successfully."
-          # You can use GitHub notifications, Slack, or other integrations here
         if: success()
