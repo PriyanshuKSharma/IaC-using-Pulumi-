@@ -14,35 +14,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-       # Set Pulumi Access Token (accessed from GitHub Secrets)
+      # Set Pulumi Access Token (accessed from GitHub Secrets)
       - name: Set Pulumi Access Token
         run: echo "PULUMI_ACCESS_TOKEN=${{ secrets.PULUMI_ACCESS_TOKEN }}" >> $GITHUB_ENV
-        
-
-      # Setup Python environment
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-
-      # Install specific version of Pulumi (e.g., 3.0.0)
-      - name: Install Specific Version of Pulumi
+      
+      # Install Pulumi (example for installation)
+      - name: Install Pulumi
         run: |
-          echo "Installing Pulumi version 3.0.0"
-          VERSION="3.0.0"
-          PULUMI_URL="https://github.com/pulumi/pulumi/releases/download/v${VERSION}/pulumi-v${VERSION}-linux-x64.tar.gz"
-          
-          # Download and extract Pulumi
-          curl -fsSL ${PULUMI_URL} -o pulumi.tar.gz
-          mkdir -p $HOME/.pulumi/bin
-          tar -xzf pulumi.tar.gz -C $HOME/.pulumi/bin
-          
-          # Ensure the installed version is in the PATH
-          echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
-          echo "Pulumi version:"
-          pulumi version # Verify the installed version
-
-      # Setup AWS Credentials using the secret AWS_CONFIG
+          curl -fsSL https://get.pulumi.com | sh
+          echo "Pulumi version installed"
+      
+      # Setup AWS Credentials
       - name: Setup AWS Credentials
         run: |
           echo "${{ secrets.AWS_CONFIG }}" > aws_credentials.json
@@ -52,23 +34,6 @@ jobs:
           pulumi stack select dev
           pulumi config set aws:region $AWS_REGION
 
-      # Install Python dependencies
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
-      # Run Pulumi to apply the infrastructure changes
+      # Run Pulumi
       - name: Run Pulumi
         run: pulumi up --yes
-
-      # Publishing Pulumi outputs as GitHub Actions artifacts
-      - name: Save Pulumi Outputs
-        run: |
-          pulumi stack output --json > pulumi_outputs.json
-          echo "Pulumi outputs saved to pulumi_outputs.json"
-        if: success()
-      
-      # Setting a notification or status update after the deployment
-      - name: Notify Deployment Status
-        run: |
-          echo "Pulumi deployment completed successfully."
-        if: success()
